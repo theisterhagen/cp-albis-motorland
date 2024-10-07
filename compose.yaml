@@ -7,8 +7,8 @@ services:
       SHOPIFY_APP_URL: "https://cp-albis-motorland.cpro-server.de"
       SHOPIFY_SHOP: "cp-albis-motorland.myshopify.com"
       HOST: "0.0.0.0"
-      SHOPIFY_API_KEY: "5fefbbc3ee82ed723767a5e9019489e1"
-      SHOPIFY_API_SECRET: "da78806dd6514cf8def525790ef16dd2"
+      SHOPIFY_API_KEY: "19a3cd83438a8cf1c48c187b5ee9af43"
+      SHOPIFY_API_SECRET: "7d0294a3a8403af39d75cfeae1eb7794"
       SCOPES: "write_products,write_orders,read_orders"
       DATABASE_URL: "mysql://root:1WrPZqlCnk4CHbpd31cq@cp-albis-motorland_db:3306/cp-albis-motorland" # TODO: change me for new instance
     labels:

@@ -1,6 +1,6 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "5fefbbc3ee82ed723767a5e9019489e1"
+client_id = "19a3cd83438a8cf1c48c187b5ee9af43"
 name = "CP - Albis Leasing"
 handle = "cp-albis-motorland"
 application_url = "https://cp-albis-motorland.cpro-server.de"
