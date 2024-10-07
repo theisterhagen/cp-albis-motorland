@@ -1,0 +1,62 @@
+<script src="{{ 'albis-cart.js' | asset_url }}" defer="defer"></script>
+{{ 'albis-product.css' | asset_url | stylesheet_tag }}
+
+<div
+  hidden
+  id="ah-cart-price"
+  class="albisHiddenInfo">{{ cart.total_price }}</div>
+<div
+  hidden
+  id="ah-shop-domain"
+  class="albisHiddenInfo">{{ shop.domain }}</div>
+
+<style>
+  #ah-cart-redirect {
+    {% if cart.total_price < 50000 %}
+      display: none;
+    {% endif %}
+  }
+  .items-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .title-text {
+    max-width: 120px;
+    width: 100%;
+  }
+.btnPlusText {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.separator{
+  margin: 0;
+}
+
+</style>
+
+<div id="ah-cart-redirect {% if cart.empty? %} albisHiddenInfo{% endif %}">
+  <p class="items-center separator">- oder -</p>
+  <div class="btnPlusText">
+    <h4 class="title-text">Albis Leasing</h4>
+    <a class="button full-width" href="https://{{ shop.permanent_domain }}/pages/albis-leasing">👉 Jetzt Leasen</a>
+  </div>
+  <div class="preview-container">
+    <span class="items-center">Leasen statt kaufen!</span>
+    <table id="preview-table" class="d-flex flex-center ta-left preview-text">
+      <tr class="alternate-color">
+        <th>Laufzeit</th>
+        <th>monatliche Rate</th>
+      </tr>
+      <tr hidden id="albis-replace-rates"></tr>
+    </table>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Cart Albis Leasing",
+    "target": "section"
+  }
+{% endschema %}

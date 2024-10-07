@@ -1,0 +1,25 @@
+{{ 'albis-leasing-style.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'albis-leasing-script.js' | asset_url }}" defer="defer"></script>
+<div id="shopDomain" style="visibility: hidden;">{{ shop.domain }}</div>
+<div id="shopSecureUrl" style="visibility: hidden;">{{ shop.secure_url }}</div>
+<div id="shopId" style="visibility: hidden; display: none;">{{ shop.id }}</div>
+
+{% if customer %}
+  {% assign customerData = customer.id 
+    | append: "," | append: customer.first_name | append: "," | append: customer.last_name 
+    | append: "," | append: customer.default_address.address1 | append: "," | append: customer.default_address.zip 
+    | append: "," | append: customer.default_address.city | append: "," | append: customer.phone
+    | append: "," | append: customer.email %}
+
+  <div id="cf-customer" style="visibility: hidden; display: none;">{{ customerData }}</div>
+{% endif %}
+
+<div id="root"></div>
+
+{% schema %}
+{
+  "name": "Albis Leasing",
+  "target": "section"
+}
+{% endschema %}
+

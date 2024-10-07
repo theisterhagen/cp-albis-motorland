@@ -1,0 +1,47 @@
+{{ 'albis-product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'albis-product.js' | asset_url }}" defer="defer"></script>
+<div
+  hidden
+  id="ah-variant-id"
+  class="albisHiddenInfo">{{ product.selected_or_first_available_variant.id }}</div>
+<div
+  hidden
+  id="ah-product-id"
+  class="albisHiddenInfo">{{ product.id }}</div>
+<div
+  hidden
+  id="ah-secure-url"
+  class="albisHiddenInfo">{{ shop.secure_url }}</div>
+<div
+  hidden
+  id="ah-product-price"
+  class="albisHiddenInfo">{{ product.price }}</div>
+<div
+  hidden
+  id="ah-shop-domain"
+  class="albisHiddenInfo">{{ shop.domain }}</div>
+
+<div id="containerAddProductAndRedirect" class="d-flex gap {% unless product.available and product.selected_or_first_available_variant.available %} albisHiddenInfo{% endunless %}" id="ah-product-section">
+  <div class="separator">- oder -</div>
+  {% comment %} <a id="addProductAndRedirect" class="button full-width" href="https://{{ shop.permanent_domain }}/pages/albis-leasing">👉 Jetzt Leasen</a> {% endcomment %}
+  <button id="addProductAndRedirect" class="button full-width">👉 Jetzt Leasen</button>
+  {% if product.price >= 50000 %}
+    <div class="preview-container">
+      <div>Leasen statt kaufen!</div>
+      <table id="preview-table" class="d-flex flex-center ta-left preview-text">
+        <tr class="alternate-color">
+          <th>Laufzeit</th>
+          <th>monatliche Rate</th>
+        </tr>
+        <tr hidden id="albis-replace-rates"></tr>
+      </table>
+      </div>
+  {% endif %}
+</div>
+
+{% schema %}
+  {
+    "name": "Product Albis Leasing",
+    "target": "section"
+  }
+{% endschema %}

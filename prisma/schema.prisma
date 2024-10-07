@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Note that some adapters may set a maximum length for the String type by default, please ensure your strings are long
+// enough when changing adapters.
+// See https://www.prisma.io/docs/orm/reference/prisma-schema-reference#string for more information
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  // provider = "sqlite"
+  // url      = "file:dev.sqlite"
+}
+
+model Session {
+  id          String    @id
+  shop        String
+  state       String
+  isOnline    Boolean   @default(false)
+  scope       String?
+  expires     DateTime?
+  accessToken String
+  userId      BigInt?
+}
+
+model ModulAktiv {
+  id                Int                @id @default(autoincrement())
+  shop              String             @unique
+  isModulAktiv      Boolean
+  ModulZugangsdaten ModulZugangsdaten?
+}
+
+model ModulZugangsdaten {
+  id                 Int                 @id @default(autoincrement())
+  apiLink            String
+  benutzer           String
+  passwort           String
+  isCredentialsValid Boolean?
+  modulAktivId       Int                 @unique
+  modulAktiv         ModulAktiv          @relation(fields: [modulAktivId], references: [id])
+  ModulEinstellungen ModulEinstellungen?
+}
+
+model ModulEinstellungen {
+  id                                 Int               @id @default(autoincrement())
+  vertragsart                        String
+  restwertInBeiTAVertrag             Boolean?
+  produktgruppe                      String
+  produktgruppeLabel                 String
+  zahlungsweisen                     String
+  auswahlZahlungsweiseAnzeigen       Boolean
+  minLeasingsumme                    String
+  servicePauschaleNetto              String
+  albisServiceGebuhrNetto            String
+  provisionsangabe                   String
+  objektVersicherung                 Boolean
+  auswahlObjektVersicherungAnzeigen  Boolean
+  mietsonderzahlung                  String
+  eingabeSonderzahlungErmoglichen    Boolean
+  pInfoseiteZeigeAlle                Boolean
+  antragOhneArtikelMoglich           Boolean
+  kundeKannFinanzierungsbetragAndern Boolean
+  zugangsdatenId                     Int               @unique
+  zugangsdaten                       ModulZugangsdaten @relation(fields: [zugangsdatenId], references: [id])
+}
+
+model AntragDetails {
+  id            Int            @id @default(autoincrement())
+  antragnr      Int            @unique
+  complete      Boolean
+  status        Int
+  status_txt    String
+  kaufpreis     Float
+  eingegangen   String
+  ln_name       String
+  ln_telefon    String?
+  ln_mobil      String?
+  ln_email      String
+  gf_name       String
+  gf_vname      String
+  lastCheckAt   String
+  ShopifyOrders ShopifyOrders?
+}
+
+model ShopifyOrders {
+  id             Int            @id @default(autoincrement())
+  draftOrderId   String         @unique
+  draftOrderName String         @unique
+  shop           String
+  orderId        String?        @unique
+  orderName      String?
+  antragnr       Int?           @unique
+  antragDetails  AntragDetails? @relation(fields: [antragnr], references: [antragnr])
+}

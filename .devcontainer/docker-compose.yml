@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  dev:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+
+    volumes:
+      - ..:/workspaces/dev:cached
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+    network_mode: service:db
+    
+    environment:
+      - DB_PASSWORD=todo
+      - DB_USER=root
+      - DB_NAME=db
+      - DB_HOST=cp-albis-motorland_db
+      - DB_PORT=3306
+      - DATABASE_URL=mysql://root:todo@localhost:3306/cp-albis-motorland_db
+
+  db:
+    container_name: cp-albis-motorland_db
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW --skip-innodb-read-only-compressed
+    image: mariadb:10
+    restart: always
+    volumes:
+      - ../../db:/var/lib/mysql
+    environment:
+      - MARIADB_INITDB_SKIP_TZINFO=true
+      - MARIADB_DATABASE=db
+        #  - TZ=Europe/Berlin
+      - MYSQL_ROOT_PASSWORD=todo

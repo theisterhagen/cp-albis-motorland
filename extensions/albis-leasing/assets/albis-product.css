@@ -1,0 +1,65 @@
+.albisHiddenInfo {
+  visibility: hidden;
+}
+
+.d-flex {
+  display: flex;
+  flex-direction: column;
+}
+
+.gap {
+  gap: 10px;
+}
+
+.flex-center {
+  justify-content: center;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.ta-left {
+  text-align: left;
+}
+
+.preview-container {
+  border: 1px solid #ddd;
+  /* padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 20px; */
+  padding: 10px 10px 20px;
+}
+
+.preview-text {
+  font-size: 14px;
+  font-family: "Roboto", sans-serif;
+  line-height: 1.4;
+}
+
+#preview-table td {
+  padding: 0 20px;
+}
+
+#preview-table th {
+  padding: 0 20px;
+}
+
+#preview-table tr {
+  display: flex;
+  justify-content: space-around;
+}
+
+#preview-table tr:nth-child(2n) {
+  background-color: #f3f3f3;
+}
+
+.alternate-color {
+  background-color: #f3f3f3;
+}
+
+.separator {
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+}

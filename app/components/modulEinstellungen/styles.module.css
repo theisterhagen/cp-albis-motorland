@@ -1,0 +1,5 @@
+.formContainer {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 16px;
+}
