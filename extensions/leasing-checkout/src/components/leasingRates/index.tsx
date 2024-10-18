@@ -35,10 +35,7 @@ export const SectionLeasingRates = ({
 
   return leasingData.leasingRate ? (
     <BlockLayout rows={[30, "auto"]}>
-      <InlineLayout
-        inlineAlignment={"center"}
-        // padding={["none", "none", "tight", "none"]}
-      >
+      <InlineLayout inlineAlignment={"center"}>
         <Text size="large">
           Leasingraten (Finanzierungsbetrag:{" "}
           {Number(leasingValue) < 100.0

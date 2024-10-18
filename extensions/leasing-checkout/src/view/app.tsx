@@ -305,7 +305,7 @@ export function App({ pluginConfData, shopId }: AppProps) {
   console.log("countryCode", countryCode);
 
   return (
-    <BlockLayout border={"base"}>
+    <BlockLayout border={"base"} background={"subdued"}>
       <InlineLayout
         columns={["35%", "65%"]}
         blockAlignment={"center"}
@@ -370,13 +370,22 @@ export function App({ pluginConfData, shopId }: AppProps) {
                         rows={[25, 25]}
                         padding={["none", "none", "base", "none"]}
                       >
-                        <Text>
+                        <Banner
+                          status="success"
+                          title="Ihre Leasing Anfrage an Albis wurde erfolgreich
+                          versendet!"
+                        />
+                        <Banner
+                          status="success"
+                          title="Weitere Informationen erhalten Sie per Mail."
+                        />
+                        {/* <Text>
                           Ihre Leasing Anfrage an Albis wurde erfolgreich
                           versendet!
                         </Text>
                         <Text>
                           Weitere Informationen erhalten Sie per Mail.
-                        </Text>
+                        </Text> */}
                       </BlockLayout>
                     ) : (
                       <BlockLayout rows={[25, 25]}>

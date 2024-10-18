@@ -4,7 +4,7 @@ import { LeasingProvider } from "./context/leasingCtx";
 import { useGetPluginConfData } from "./hooks/useGetPluginConfData";
 import { App } from "./view/app";
 export default reactExtension(
-  "purchase.checkout.payment-method-list.render-before",
+  "purchase.checkout.payment-method-list.render-after",
   () => <Extension />,
 );
 

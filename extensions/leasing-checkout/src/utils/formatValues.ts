@@ -54,5 +54,5 @@ export const formatDateToLeasing = (dateString: string) => {
   const month = digitsOnly.substring(2, 4);
   const year = digitsOnly.substring(4, 8);
 
-  return `${year}-${day}-${month}`;
+  return `${year}-${month}-${day}`;
 };

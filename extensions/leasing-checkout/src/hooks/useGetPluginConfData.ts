@@ -49,7 +49,7 @@ export const useGetPluginConfData = ({ shop }: UseGetPluginConfDataProps) => {
     const getPluginConfData = async () => {
       try {
         const parameters = new URLSearchParams({ shop });
-        const requestUrl = `https://${shop}/api/getPluginConfData?${parameters}`;
+        const requestUrl = `https://cp-albis-motorland.cpro-server.de/api/getPluginConfData?${parameters}`;
 
         const response = await fetch(requestUrl, { method: "GET" });
         if (!response.ok) {
