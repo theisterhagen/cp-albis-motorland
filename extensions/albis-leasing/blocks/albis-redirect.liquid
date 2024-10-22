@@ -1,23 +1,9 @@
-{{ 'redirect-loading.css' | asset_url | stylesheet_tag }}
+{% comment %} {{ 'redirect-loading.css' | asset_url | stylesheet_tag }} {% endcomment %}
 <script src="{{ 'redirect.js' | asset_url }}" defer="defer"></script>
 
 <div id="shopDomain" style="visibility: hidden; display: none;">{{ shop.permanent_domain }}</div>
-<div id="shopSecureUrl" style="visibility: hidden; display: none;">{{ shop.secure_url }}</div>
-<div id="shopId" style="visibility: hidden; display: none;">{{ shop.id }}</div>
-
-<div class="custom-redirect-container">
-  <h1>Albis Leasing redirected internally</h1>
-  <p>Share information about your brand with your customers. Describe a product, make announcements, or<br/> welcome customers to your store.</p>
-</div>
-
-<div id="loadingModal" class="custom-loading-modal">
-  <div id="loadingModalContent" class="custom-loading-modal-content">
-    <p id="loadingMessage">Wir bearbeiten gerade Ihre Anfrage an Consors. Dies kann einen Moment dauern. Bitte bleiben Sie auf dieser Seite, während wir den Vorgang abschließen.</p>
-    <div class="spinner">
-      <p style="opacity: 0;">Loading ...</p>
-    </div>
-  </div>
-</div>
+ <div id="shopSecureUrl" style="visibility: hidden; display: none;">{{ shop.secure_url }}</div> 
+<h1>Albis Leasing redirected internally</h1>
 
 
 {% schema %}

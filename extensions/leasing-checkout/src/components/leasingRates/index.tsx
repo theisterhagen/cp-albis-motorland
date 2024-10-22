@@ -49,7 +49,7 @@ export const SectionLeasingRates = ({
           columns={headers.map(() => "auto")}
           border={"base"}
           borderWidth={"base"}
-          spacing={"base"}
+          // spacing={"base"}
         >
           {headers.map((header, index) => (
             <LeasingRateColumn

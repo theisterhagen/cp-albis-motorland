@@ -24,7 +24,13 @@ export const LeasingRateColumn = ({
 }: LeasingRateColumnProps) => {
   return (
     <ScrollView maxBlockSize={1000}>
-      <InlineLayout padding={"tight"}>
+      <InlineLayout
+        padding={"tight"}
+        background={"subdued"}
+        inlineAlignment={"center"}
+        borderWidth={"base"}
+        border={"base"}
+      >
         <Text emphasis="bold">{header}</Text>
       </InlineLayout>
       {leasingRate &&
@@ -33,12 +39,12 @@ export const LeasingRateColumn = ({
             case 0:
               return (
                 <BlockLayout
-                  border={"base"}
+                  border={["base", "none", "base", "base"]}
                   borderWidth={"base"}
                   spacing={"extraLoose"}
                   key={`button-${idx}`}
-                  minBlockSize={40}
-                  minInlineSize={30}
+                  minBlockSize={50}
+                  minInlineSize={125}
                   blockAlignment={"center"}
                   inlineAlignment={"center"}
                 >
@@ -62,8 +68,10 @@ export const LeasingRateColumn = ({
               return (
                 <BlockLayout
                   key={`rate-${idx}`}
-                  minBlockSize={40}
-                  minInlineSize={30}
+                  border={["base", "none"]}
+                  borderWidth={"base"}
+                  minBlockSize={50}
+                  minInlineSize={125}
                   blockAlignment={"center"}
                   inlineAlignment={"center"}
                 >
@@ -74,8 +82,10 @@ export const LeasingRateColumn = ({
               return (
                 <BlockLayout
                   key={`insurance-${idx}`}
-                  minBlockSize={40}
-                  minInlineSize={30}
+                  border={["base", "none"]}
+                  borderWidth={"base"}
+                  minBlockSize={50}
+                  minInlineSize={130}
                   blockAlignment={"center"}
                   inlineAlignment={"center"}
                 >
@@ -86,8 +96,10 @@ export const LeasingRateColumn = ({
               return (
                 <BlockLayout
                   key={`total-${idx}`}
-                  minBlockSize={40}
-                  minInlineSize={30}
+                  border={["base", "base", "base", "none"]}
+                  borderWidth={"base"}
+                  minBlockSize={50}
+                  minInlineSize={170}
                   blockAlignment={"center"}
                   inlineAlignment={"center"}
                 >

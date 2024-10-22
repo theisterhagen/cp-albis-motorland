@@ -1,6 +1,7 @@
 import {
   Banner,
   BlockLayout,
+  BlockSpacer,
   Button,
   Image,
   InlineLayout,
@@ -11,7 +12,6 @@ import {
   useCartLines,
   useEmail,
   useShippingAddress,
-  // useCustomer,
   useTotalAmount,
 } from "@shopify/ui-extensions-react/checkout";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -54,7 +54,6 @@ export function App({ pluginConfData, shopId }: AppProps) {
   const { shop, cost } = useApi();
   const email = useEmail();
   const checkoutCartLines = useCartLines();
-  // const customer = useCustomer();
   const { amount } = useTotalAmount();
 
   const {
@@ -67,9 +66,8 @@ export function App({ pluginConfData, shopId }: AppProps) {
     updateManagerData,
     updateFirmaData,
   } = useLeasingCtx();
-  const [redirectLink, setRedirectLink] = useState("");
   const [leasingBtnClicked, setLeasingBtnClicked] = useState(false);
-  const { city, address1, zip, lastName, firstName, countryCode, phone } =
+  const { city, address1, zip, lastName, firstName, phone } =
     useShippingAddress();
   const [createAlbisApp, setCreateAlbisApp] = useState({
     responseSuccess: false,
@@ -173,11 +171,6 @@ export function App({ pluginConfData, shopId }: AppProps) {
       name: albisDraftOrderResponse.draftOrder.name,
     });
 
-    // const formattedDraftOrderId = albisDraftOrderResponse.draftOrder.id.replace(
-    //   /\D/g,
-    //   "",
-    // );
-    setRedirectLink(`https://${shop.myshopifyDomain}/pages/consors-redirect`);
     console.log("AlbisDraftOrderResponse", albisDraftOrderResponse);
   };
 
@@ -190,10 +183,6 @@ export function App({ pluginConfData, shopId }: AppProps) {
   };
 
   const handleLeasingRequestSubmit = async (datenschutz: boolean) => {
-    console.log("handleLeasingRequestSubmit");
-    console.log("clientFormData", clientFormData);
-    console.log("draftOrderData", draftOrderData);
-
     if (!draftOrderData.name) {
       setStep(2);
       setCreateAlbisApp({
@@ -253,16 +242,6 @@ export function App({ pluginConfData, shopId }: AppProps) {
         responseSuccess: true,
         responseText: `Ihre Leasing Anfrage an Albis wurde erfolgreich versendet!\n\nWeitere Informationen erhalten Sie per Mail`,
       });
-      // const formattedDraftOrderId = response.draftOrder.id.replace(/\D/g, "");
-      // setRedirectLink(
-      //   `https://${shop.myshopifyDomain}/pages/consors-redirect?orderId=${formattedDraftOrderId}`,
-      // );
-      // window.location.href = `https://shopify.com/${shopId}/account/orders/${response.orderId}?locale=en-DE`;
-
-      // setRedirectLink(`https://${shop.myshopifyDomain}/pages/albis-redirect`);
-
-      // await clearCartData();
-      // }
       setLeasingLoading(false);
       return;
     }
@@ -302,7 +281,6 @@ export function App({ pluginConfData, shopId }: AppProps) {
 
     return null;
   }, [city, address1, email, zip, lastName, cost.totalShippingAmount, amount]);
-  console.log("countryCode", countryCode);
 
   return (
     <BlockLayout border={"base"} background={"subdued"}>
@@ -332,7 +310,8 @@ export function App({ pluginConfData, shopId }: AppProps) {
                 title="Leasing by Albis Leasing"
                 padding
                 onClose={() => {
-                  handleZuruckClick();
+                  // console.log("onCLose");
+                  // handleZuruckClick();
                   setLeasingBtnClicked(false);
                 }}
               >
@@ -353,12 +332,14 @@ export function App({ pluginConfData, shopId }: AppProps) {
                     step={step}
                     handleZuruckClick={handleZuruckClick}
                     createAlbisAppResponse={createAlbisApp}
-                    redirectLink={redirectLink}
                   />
                 )}
 
                 {step === 0 && (
-                  <BlockLayout inlineAlignment={"center"}>
+                  <BlockLayout
+                    inlineAlignment={"center"}
+                    rows={["auto", "auto"]}
+                  >
                     {leasingLoading && (
                       <Text>
                         Wir senden ihre Anfrage an ALBIS, bitte warten Sie einen
@@ -367,32 +348,44 @@ export function App({ pluginConfData, shopId }: AppProps) {
                     )}
                     {createAlbisApp.responseSuccess ? (
                       <BlockLayout
-                        rows={[25, 25]}
-                        padding={["none", "none", "base", "none"]}
+                        rows={[180, 50]}
+                        spacing={"tight"}
+                        padding={["none", "none", "tight", "none"]}
                       >
-                        <Banner
-                          status="success"
-                          title="Ihre Leasing Anfrage an Albis wurde erfolgreich
+                        <BlockLayout rows={[50, 10, 50, 10, 50]}>
+                          <Banner
+                            status="success"
+                            title="Ihre Leasing Anfrage an Albis wurde erfolgreich
                           versendet!"
-                        />
-                        <Banner
-                          status="success"
-                          title="Weitere Informationen erhalten Sie per Mail."
-                        />
-                        {/* <Text>
-                          Ihre Leasing Anfrage an Albis wurde erfolgreich
-                          versendet!
-                        </Text>
-                        <Text>
-                          Weitere Informationen erhalten Sie per Mail.
-                        </Text> */}
+                          />
+                          <BlockSpacer spacing="extraTight" />
+                          <Banner
+                            status="success"
+                            title="Alle Artikel in deinem Warenkorb wurden gespeichert!"
+                          />
+                          <BlockSpacer spacing="extraTight" />
+                          <Banner
+                            status="info"
+                            title="Weitere Informationen erhalten Sie per Mail."
+                          />
+                        </BlockLayout>
+
+                        <BlockLayout inlineAlignment={"end"}>
+                          <BlockLayout maxBlockSize={50} maxInlineSize={80}>
+                            <Button
+                              onPress={() => console.log(shop.myshopifyDomain)}
+                              to={`https://${shop.myshopifyDomain}/pages/albis-redirect`}
+                            >
+                              Beenden
+                            </Button>
+                          </BlockLayout>
+                        </BlockLayout>
                       </BlockLayout>
                     ) : (
-                      <BlockLayout rows={[25, 25]}>
-                        <Text>{createAlbisApp.responseText}</Text>
+                      <BlockLayout padding={["base", "none"]}>
+                        <Spinner size="large" />
                       </BlockLayout>
                     )}
-                    <Spinner size="large" />
                   </BlockLayout>
                 )}
               </Modal>

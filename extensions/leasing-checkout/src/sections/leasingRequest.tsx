@@ -24,7 +24,6 @@ type LeasingRequestProps = {
     responseSuccess: boolean;
     responseText: string;
   };
-  redirectLink: string;
 };
 
 export const LeasingRequest = ({
@@ -34,7 +33,6 @@ export const LeasingRequest = ({
   handleLeasingRequestSubmit,
   handleZuruckClick,
   createAlbisAppResponse,
-  redirectLink,
 }: LeasingRequestProps) => {
   const { clientFormData, updateDatenschutz } = useLeasingCtx();
   const [error, setError] = useState({
@@ -77,7 +75,7 @@ export const LeasingRequest = ({
     }
     return allFieldsFilled && clientFormData.datenschutz;
   };
-  console.log("redirectLink", redirectLink);
+
   return (
     <BlockLayout rows={["auto", "auto", "auto"]}>
       <LeasingOverview />
@@ -133,10 +131,8 @@ export const LeasingRequest = ({
                 if (isSendenBtnEnable()) {
                   handleStepChange(0);
                   await handleLeasingRequestSubmit(clientFormData.datenschutz);
-                  console.log("inside IF redirectLink", redirectLink);
                 }
               }}
-              // to={redirectLink}
             >
               Leasingantrag Senden
             </Button>
