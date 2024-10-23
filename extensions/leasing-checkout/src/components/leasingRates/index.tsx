@@ -75,7 +75,7 @@ export const SectionLeasingRates = ({
         </InlineLayout>
       )}
       <View background={"subdued"} padding={"tight"}>
-        <BlockLayout rows={[55, 20, 55, 25]}>
+        <BlockLayout rows={[55, 20, 55, 20]}>
           <Text size="small">
             WICHTIG: Bitte achten Sie darauf, dass die Lieferzeiten zum
             Zeitpunkt der Antragstellung gelten. Bis Sie den Leasingvertrag
@@ -89,9 +89,6 @@ export const SectionLeasingRates = ({
             size="small"
             appearance="info"
           >{`(2) Der Leasingnehmer kann durch Vorlage eines auf die ALBIS HiTec Leasing GmbH ausgestellten Sicherungsscheins die ausreichende Deckung durch eine bestehende oder neu abzuschließende Versicherung bei jedem beliebigen Versicherungsgeber nachweisen.`}</Text>
-          <Text size="small" appearance="info">
-            {`(1s) Eine zusätzliche einmalige Gebühr in Höhe von 67,50 € netto wird berechnet.`}
-          </Text>
         </BlockLayout>
       </View>
     </BlockLayout>

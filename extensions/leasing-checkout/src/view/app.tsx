@@ -1,4 +1,5 @@
 import {
+  Badge,
   Banner,
   BlockLayout,
   BlockSpacer,
@@ -79,7 +80,6 @@ export function App({ pluginConfData, shopId }: AppProps) {
     name: "",
   });
   const [leasingLoading, setLeasingLoading] = useState(false);
-  // const [errorMsg, setErrorMsg] = useState("");
   const [zahlungsweisen, setZahlungsweisen] = useState<
     GetZahlungsweisen | undefined
   >();
@@ -104,10 +104,13 @@ export function App({ pluginConfData, shopId }: AppProps) {
           zahlungsweiseLabel,
         };
         updateCalcFormData(updatedCalcFormData);
-        handleGetRate(updatedCalcFormData);
+        if (amount >= 500) {
+          handleGetRate(updatedCalcFormData);
+        }
       };
       getZahlungsweisen();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pluginConfData]);
 
   const handleGetRate = useCallback(
@@ -253,6 +256,14 @@ export function App({ pluginConfData, shopId }: AppProps) {
   };
 
   const isModalDisabled: string | null = useMemo(() => {
+    if (!cost.totalShippingAmount.current) {
+      return "Bitte berechnen Sie die Versandkosten!";
+    }
+
+    if (amount < 500.0) {
+      return "Der Mindestbetrag für das Leasing beträgt €500,00.";
+    }
+
     const isValidMail = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email);
     const isValidAddress = /^(?=.*[A-Za-z])(?=.*\d).+$/.test(address1);
 
@@ -266,24 +277,23 @@ export function App({ pluginConfData, shopId }: AppProps) {
     )
       return "Bitte füllen Sie alle erforderlichen Adress- und Kontaktdaten aus!";
 
-    if (!cost.totalShippingAmount.current)
-      return "Bitte berechnen Sie die Versandkosten!";
-
-    if (amount < 500.0)
-      return "Der Mindestbetrag für das Leasing beträgt €500,00.";
-
-    updateManagerData({
-      strasseGF: address1,
-      vorname: firstName ?? "",
-      nachname: lastName,
-    });
-    updateFirmaData({ email: email });
-
     return null;
   }, [city, address1, email, zip, lastName, cost.totalShippingAmount, amount]);
 
+  useEffect(() => {
+    if (!isModalDisabled) {
+      updateManagerData({
+        strasseGF: address1,
+        vorname: firstName ?? "",
+        nachname: lastName,
+      });
+      updateFirmaData({ email: email });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isModalDisabled]);
+
   return (
-    <BlockLayout border={"base"} background={"subdued"}>
+    <BlockLayout border={"base"} background={"subdued"} rows={["auto", "auto"]}>
       <InlineLayout
         columns={["35%", "65%"]}
         blockAlignment={"center"}
@@ -300,7 +310,9 @@ export function App({ pluginConfData, shopId }: AppProps) {
           />
         </BlockLayout>
         {isModalDisabled ? (
-          <Button>Jetzt Leasing mit Albis Leasing</Button>
+          <Button onPress={() => setLeasingBtnClicked(true)}>
+            Jetzt Leasing mit Albis Leasing
+          </Button>
         ) : (
           <Button
             onPress={() => setLeasingBtnClicked(true)}
@@ -310,8 +322,6 @@ export function App({ pluginConfData, shopId }: AppProps) {
                 title="Leasing by Albis Leasing"
                 padding
                 onClose={() => {
-                  // console.log("onCLose");
-                  // handleZuruckClick();
                   setLeasingBtnClicked(false);
                 }}
               >
@@ -396,9 +406,15 @@ export function App({ pluginConfData, shopId }: AppProps) {
         )}
       </InlineLayout>
       {leasingBtnClicked && isModalDisabled && (
-        <InlineLayout inlineAlignment={"center"} blockAlignment={"center"}>
-          {" "}
-          <Banner title={isModalDisabled} status="critical" />
+        <InlineLayout
+          inlineAlignment={"center"}
+          blockAlignment={"center"}
+          maxBlockSize={50}
+          minBlockSize={40}
+        >
+          <Badge tone="critical">
+            <Text size="base">{isModalDisabled}</Text>
+          </Badge>
         </InlineLayout>
       )}
     </BlockLayout>

@@ -1,6 +1,7 @@
 import type { ActionFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 // import { scheduleAntragCheck } from "~/cronJobs";
+import { scheduleCleanUp } from "~/cleanJobs";
 import {
   getAntragDetails,
   updateAntragDetails,
@@ -11,7 +12,7 @@ import {
 } from "~/models/shopifyOrder.server";
 import { addNoteToOrder } from "~/shopify/graphql/addNoteToOrder";
 import { completeDraftOrder } from "~/shopify/graphql/completeDraftOrder";
-import { cancelOrder } from "~/shopify/graphql/orderCancel";
+import { deleteDraftOrder } from "~/shopify/graphql/deleteDraftOrder";
 import type { CompleteDraftOrderResponse } from "~/types/routesInterfaces";
 import { isJsonRpcErrorResponse } from "~/utils/formatData";
 import { getAlbisMethodsData } from "~/utils/getAlbisMethodsData";
@@ -32,16 +33,16 @@ export const action: ActionFunction = async ({ request }) => {
       antragnr,
     });
     const currentAntragnr = await getAntragDetails(antragnr);
-    if (!shopifyOrders?.orderId || !currentAntragnr) {
-      return json(
-        { error: "Antragnr does not match with any Order" },
-        {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-          },
+
+    if (!shopifyOrders || !shopifyOrders?.orderId || !currentAntragnr) {
+      return new Response("Error processing shopify Orders Data", {
+        status: 404,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
         },
-      );
+      });
     }
+
     const newAntragDetails: GetAntragDetails | JsonRpcErrorResponse =
       await getAlbisMethodsData({
         method: "getAntragDetails",
@@ -57,14 +58,7 @@ export const action: ActionFunction = async ({ request }) => {
         },
       });
     }
-    if (!shopifyOrders) {
-      return new Response("Error processing shopify Orders Data", {
-        status: 404,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-      });
-    }
+
     const { result } = newAntragDetails;
     const statusData = checkAntragStatus(result.status, result.status_txt);
     const checkDates = currentAntragnr.lastCheckAt
@@ -114,16 +108,12 @@ export const action: ActionFunction = async ({ request }) => {
         },
       });
     }
-    await addNoteToOrder(shop, shopifyOrders.orderId, statusData.statusNote);
 
     switch (statusData.action) {
       case "Cancel":
-        await cancelOrder(shop, shopifyOrders.orderId, {
-          notifyCustomer: true,
-          reason: "OTHER",
-          refund: false,
-          restock: true,
-        });
+        await deleteDraftOrder(shop, shopifyOrders.draftOrderId);
+        const scheduledTaskCancel = scheduleCleanUp(shopifyOrders.draftOrderId);
+        scheduledTaskCancel.cancel();
         break;
       case "Paid":
         const completeOrderResponse = await completeDraftOrder(
@@ -150,27 +140,16 @@ export const action: ActionFunction = async ({ request }) => {
             },
           );
 
-        console.log("updatedShopifyOrderData", updatedShopifyOrderData);
         await addNoteToOrder(
           shop,
           updatedShopifyOrderData?.orderId ?? "",
           statusData.statusNote,
         );
-
-        // scheduleAntragCheck(shopifyOrders.antragnr, shopifyOrders.shop);
         break;
       case "Refund":
-        await cancelOrder(shop, shopifyOrders.orderId, {
-          notifyCustomer: true,
-          reason: "OTHER",
-          refund: true,
-          restock: true,
-        });
-        await addNoteToOrder(
-          shop,
-          shopifyOrders.orderId,
-          statusData.statusNote,
-        );
+        await deleteDraftOrder(shop, shopifyOrders.draftOrderId);
+        const scheduledTaskDelete = scheduleCleanUp(shopifyOrders.draftOrderId);
+        scheduledTaskDelete.cancel();
         break;
 
       default:
